@@ -13,6 +13,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
+import Snackbar from '../../mui-components/Snackbar/Snackbar';
+
+import VirtualizedList from '../../mui-components/VirtualizedList/VirtualizedList';
+
 import '../../containers/List/List.scss';
 
 function TabContainer(props) {
@@ -67,7 +71,19 @@ export default function NavTabs(props) {
       <Typography variant="h4" gutterBottom>
         Uppgifter att göra
       </Typography>
-        <List tasks={props.tasks} deleted={props.deleted} />
+        <List tasks={props.tasks} 
+        deleted={props.deleted} 
+        openEdit={props.openEdit} 
+        closeEdit={props.closeEdit} 
+        dialogShown={props.dialogShown} 
+        changed={props.changed} 
+        currentValue={props.currentValue} 
+        edited={props.edited} 
+        editID={props.editID} 
+        editedValue={props.editedValue} 
+        editedChange={props.editedChange} 
+        toggled={props.toggled}
+         />
       <FormControl classes={{root: 'form-extend'}}>
         <InputLabel htmlFor="component-simple">Lägg till uppgift</InputLabel>
         <Input classes={{root: 'add-input'}} id="component-simple" onChange={props.changed} value={props.currentValue} />
@@ -75,8 +91,11 @@ export default function NavTabs(props) {
           <AddIcon />
       </Fab>
       </FormControl>
+      {props.snackbar ? <Snackbar snackbar={props.snackbar} snackbarType={props.snackbarType} closeSnackbar={props.closeSnackbar} /> : null}
       </TabContainer>}
-      {value === 1 && <TabContainer>Page Two</TabContainer>}
+      {value === 1 && <TabContainer>
+        <VirtualizedList />
+      </TabContainer>}
       </Container>
     </div>
   );

@@ -10,6 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/EditOutlined';
 
+import FormDialog from '../../mui-components/FormDialog/FormDialog';
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -23,20 +25,11 @@ export default function CheckboxList(props) {
   const [checked, setChecked] = React.useState([]);
 
   const handleToggle = task => () => {
-    const currentIndex = checked.indexOf(task);
-    console.log(currentIndex);
+    // const currentIndex = checked.indexOf(task);
     const newChecked = [...checked];
+    props.toggled(task.id);
 
-    if (currentIndex === -1) {
-      newChecked.push(task);
-    } else {
-      newChecked.splice(currentIndex, 1);
-      console.log(newChecked);
-    }
-
-    console.log('checked: ' + checked);
     setChecked(newChecked);
-    console.log('newChecked: ' + newChecked);
   };
 
   return (
@@ -49,7 +42,7 @@ export default function CheckboxList(props) {
             <ListItemIcon>
               <Checkbox
                 edge="start"
-                checked={checked.indexOf(task) !== -1}
+                checked={task.done}
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ 'aria-labelledby': labelId }}
@@ -57,7 +50,7 @@ export default function CheckboxList(props) {
             </ListItemIcon>
             <ListItemText id={labelId} primary={`${task.text}`} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="Edit">
+              <IconButton edge="end" aria-label="Edit" onClick={(id) => props.openEdit(task.id)}>
                 <EditIcon />
               </IconButton>
               <IconButton onClick={(id) => props.deleted(task.id)} edge="end" aria-label="Delete">
@@ -67,6 +60,7 @@ export default function CheckboxList(props) {
           </ListItem>
         );
       })}
+      <FormDialog closeEdit={props.closeEdit} dialogShown={props.dialogShown} changed={props.changed} currentValue={props.currentValue} edited={props.edited} editID={props.editID} editedValue={props.editedValue} editedChange={props.editedChange} />
     </List>
   );
 }
