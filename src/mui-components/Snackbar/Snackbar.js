@@ -109,7 +109,7 @@ export default function CustomizedSnackbars(props) {
         snackbar = <MySnackbarContentWrapper
           onClose={props.closeSnackbar}
           variant="success"
-          message="Uppgiften har lagts till!"
+          message={props.snackbarMessage}
         />;
         break;
     case 'error':
@@ -117,8 +117,9 @@ export default function CustomizedSnackbars(props) {
         variant="error"
         className={classes.margin} 
         onClose={props.closeSnackbar} 
-        message="Du måste fylla i fältet."
+        message={props.snackbarMessage}
       />;
+      break;
     default: return snackbar;
   }
 

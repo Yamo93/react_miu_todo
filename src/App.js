@@ -15,6 +15,7 @@ class App extends Component {
     },
     snackbar: false,
     snackbarType: null,
+    snackbarMessage: null,
     editDialogShown: false,
     currentlyEditedTaskID: null,
     editedValue: ''
@@ -31,7 +32,8 @@ class App extends Component {
       if (prevState.task.text === '') {
         return {
           snackbar: true,
-          snackbarType: 'error'
+          snackbarType: 'error',
+          snackbarMessage: 'Du måste fylla i fältet.'
         };
       }
 
@@ -43,7 +45,8 @@ class App extends Component {
           done: false
         },
         snackbar: true,
-        snackbarType: 'success'
+        snackbarType: 'success',
+        snackbarMessage: 'Uppgiften har lagts till!'
       };
     });
   }
@@ -64,13 +67,19 @@ class App extends Component {
           text: ''
         },
         editDialogShown: false,
-        editedValue: ''
+        editedValue: '',
+        snackbar: true,
+        snackbarType: 'success',
+        snackbarMessage: 'Uppgiften har ändrats.',
+        doneTasks: prevState.tasks.filter(task => task.done === true)
       };
     });
   }
   
   openEditDialog = (id) => {
-    this.setState({editDialogShown: true, currentlyEditedTaskID: id});
+    this.setState({editDialogShown: true, 
+      currentlyEditedTaskID: id
+    });
   }
   
   closeEditDialog = () => {
@@ -95,7 +104,10 @@ class App extends Component {
       return {
         tasks: prevState.tasks.filter(task => {
           return task.id !== id;
-        })
+        }),
+        snackbar: true,
+        snackbarType: 'error',
+        snackbarMessage: 'Uppgiften har raderats.'
       };
     });
   }
@@ -114,8 +126,19 @@ class App extends Component {
   }
 
   toggleAsDone = (id) => {
-    console.log('hey from toggle method');
+
     this.setState(prevState => {
+      let newTask = {};
+      prevState.tasks.forEach(task => {
+          if (task.id === id) {
+            newTask = {
+              ...task,
+              text: '',
+              done: !task.done
+            };
+          }
+      });
+
       return {
         tasks: prevState.tasks.map(task => {
           // Inte den som ska uppdateras
@@ -127,13 +150,17 @@ class App extends Component {
             ...task,
             done: !task.done
           }
-        })
+        }),
+        task: newTask,
+        snackbar: true
       }
     });
 
     this.setState(prevState => {
       return {
-        doneTasks: prevState.tasks.filter(task => task.done === true)
+        doneTasks: prevState.tasks.filter(task => task.done === true),
+        snackbarType: prevState.task.done ? 'success' : 'warning',
+        snackbarMessage: prevState.task.done ? 'Uppgiften är utförd!' : 'Uppgiften har sparats som ej utförd.'
       };
     });
   }
@@ -149,6 +176,7 @@ class App extends Component {
         deleted={this.deleteTaskHandler} 
         snackbar={this.state.snackbar} 
         snackbarType={this.state.snackbarType} 
+        snackbarMessage={this.state.snackbarMessage} 
         closeSnackbar={this.closeSnackbar} 
         openEdit={this.openEditDialog} 
         closeEdit={this.closeEditDialog} 

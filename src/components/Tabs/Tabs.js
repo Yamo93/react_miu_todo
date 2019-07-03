@@ -91,7 +91,7 @@ export default function NavTabs(props) {
           <AddIcon />
       </Fab>
       </FormControl>
-      {props.snackbar ? <Snackbar snackbar={props.snackbar} snackbarType={props.snackbarType} closeSnackbar={props.closeSnackbar} /> : null}
+      {props.snackbar ? <Snackbar snackbar={props.snackbar} snackbarType={props.snackbarType} snackbarMessage={props.snackbarMessage} closeSnackbar={props.closeSnackbar} /> : null}
       </TabContainer>}
       {value === 1 && <TabContainer classes={{root: 'list-container'}}>
         <Typography variant="h4" gutterBottom>

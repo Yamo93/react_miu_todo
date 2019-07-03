@@ -20,7 +20,7 @@ export default function FormDialog(props) {
             autoFocus
             margin="dense"
             id="name"
-            label="Ny uppgift"
+            label="Ändra uppgift" 
             type="text" 
             onChange={props.editedChange} 
             value={props.editedValue} 
