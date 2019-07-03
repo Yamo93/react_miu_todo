@@ -15,7 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import Snackbar from '../../mui-components/Snackbar/Snackbar';
 
-import VirtualizedList from '../../mui-components/VirtualizedList/VirtualizedList';
+import AvatarList from '../../mui-components/AvatarList/AvatarList';
 
 import '../../containers/List/List.scss';
 
@@ -93,8 +93,11 @@ export default function NavTabs(props) {
       </FormControl>
       {props.snackbar ? <Snackbar snackbar={props.snackbar} snackbarType={props.snackbarType} closeSnackbar={props.closeSnackbar} /> : null}
       </TabContainer>}
-      {value === 1 && <TabContainer>
-        <VirtualizedList />
+      {value === 1 && <TabContainer classes={{root: 'list-container'}}>
+        <Typography variant="h4" gutterBottom>
+        Färdiga uppgifter
+      </Typography>
+        <AvatarList doneTasks={props.doneTasks} />
       </TabContainer>}
       </Container>
     </div>

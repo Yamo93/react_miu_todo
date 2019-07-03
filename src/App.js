@@ -135,7 +135,7 @@ class App extends Component {
       return {
         doneTasks: prevState.tasks.filter(task => task.done === true)
       };
-    })
+    });
   }
 
   render() {
@@ -156,7 +156,8 @@ class App extends Component {
         edited={this.editTaskHandler} 
         editID={this.state.currentlyEditedTaskID} 
         editedChange={this.editInputChangeHandler} 
-        toggled={this.toggleAsDone} />
+        toggled={this.toggleAsDone} 
+        doneTasks={this.state.doneTasks} />
       </div>
     );
   }
