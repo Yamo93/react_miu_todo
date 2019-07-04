@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/react_miu_todo/static/css/main.a87b06b4.chunk.css",
+    "main.js": "/react_miu_todo/static/js/main.50a418b6.chunk.js",
+    "main.js.map": "/react_miu_todo/static/js/main.50a418b6.chunk.js.map",
+    "runtime~main.js": "/react_miu_todo/static/js/runtime~main.2269339e.js",
+    "runtime~main.js.map": "/react_miu_todo/static/js/runtime~main.2269339e.js.map",
+    "static/css/2.9b601978.chunk.css": "/react_miu_todo/static/css/2.9b601978.chunk.css",
+    "static/js/2.30319381.chunk.js": "/react_miu_todo/static/js/2.30319381.chunk.js",
+    "static/js/2.30319381.chunk.js.map": "/react_miu_todo/static/js/2.30319381.chunk.js.map",
+    "index.html": "/react_miu_todo/index.html",
+    "precache-manifest.8788855001bf173c656709c4ddebfafd.js": "/react_miu_todo/precache-manifest.8788855001bf173c656709c4ddebfafd.js",
+    "service-worker.js": "/react_miu_todo/service-worker.js",
+    "static/css/2.9b601978.chunk.css.map": "/react_miu_todo/static/css/2.9b601978.chunk.css.map",
+    "static/css/main.a87b06b4.chunk.css.map": "/react_miu_todo/static/css/main.a87b06b4.chunk.css.map",
+    "static/media/index.css": "/react_miu_todo/static/media/roboto-latin-900italic.bc833e72.woff"
+  }
+}
