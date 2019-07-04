@@ -17,6 +17,8 @@ import Snackbar from '../../mui-components/Snackbar/Snackbar';
 
 import AvatarList from '../../mui-components/AvatarList/AvatarList';
 
+import ClearButton from '../../mui-components/ClearButton/ClearButton';
+
 import '../../containers/List/List.scss';
 
 function TabContainer(props) {
@@ -86,7 +88,7 @@ export default function NavTabs(props) {
          />
       <FormControl classes={{root: 'form-extend'}}>
         <InputLabel htmlFor="component-simple">Lägg till uppgift</InputLabel>
-        <Input classes={{root: 'add-input'}} id="component-simple" onChange={props.changed} value={props.currentValue} />
+        <Input classes={{root: 'add-input'}} id="component-simple" onChange={props.changed} value={props.currentValue} onKeyUp={props.addTask} />
       <Fab aria-label="Add" onClick={props.addTask} className={classes.fab} color="primary">
           <AddIcon />
       </Fab>
@@ -98,6 +100,7 @@ export default function NavTabs(props) {
         Färdiga uppgifter
       </Typography>
         <AvatarList doneTasks={props.doneTasks} />
+        {props.doneTasks.length > 0 ? <ClearButton clearDoneTasks={props.clearDoneTasks} /> : null }
       </TabContainer>}
       </Container>
     </div>

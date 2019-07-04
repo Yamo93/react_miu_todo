@@ -18,16 +18,55 @@ class App extends Component {
     snackbarMessage: null,
     editDialogShown: false,
     currentlyEditedTaskID: null,
-    editedValue: ''
+    editedValue: '',
+    currentValue: ''
   }
 
-  addTaskHandler = () => {
+  componentDidMount() {
+    let storedTasks = JSON.parse(localStorage.getItem('myTasks')) || [];
+    let LSDoneTasks = JSON.parse(localStorage.getItem('doneTasks')) || [];
+
+    // Lägger in alla done tasks i staten igen (genom att söka i arrayen från LS)
+    // let doneTasks = storedTasks.filter(task => task.done === true);
+    this.setState({tasks: storedTasks, doneTasks: LSDoneTasks});
+
+  }
+
+  saveTasksInLS = (itemName, tasks) => {
+    localStorage.setItem(itemName, JSON.stringify(tasks));
+  }
+
+  clearDoneTasks = () => {
+    // Rensa från LS
+    this.saveTasksInLS('doneTasks', []);
+    let myTasks = [];
+
+    // Rensa från state (i båda arrays, så endast ogjorda tasks förblir)
     this.setState(prevState => {
-      let newTasks = [...prevState.tasks];
+      myTasks = prevState.tasks.filter(task => task.done === false);
+
+      this.saveTasksInLS('myTasks', myTasks);
+      return {
+        doneTasks: [],
+        tasks: myTasks
+      };
+    });
+  }
+
+  addTaskHandler = (event) => {
+    if (event.type === 'keyup'  && event.keyCode !== 13) {
+      return false;
+    }
+
+    let newTasks = [];
+    this.setState(prevState => {
+      newTasks = [...prevState.tasks];
       newTasks.push({
         ...this.state.task,
         id: uuid.v4()
       });
+
+      
       
       if (prevState.task.text === '') {
         return {
@@ -36,6 +75,8 @@ class App extends Component {
           snackbarMessage: 'Du måste fylla i fältet.'
         };
       }
+
+      this.saveTasksInLS('myTasks', newTasks);
 
       return {
         tasks: newTasks,
@@ -46,22 +87,29 @@ class App extends Component {
         },
         snackbar: true,
         snackbarType: 'success',
-        snackbarMessage: 'Uppgiften har lagts till!'
+        snackbarMessage: 'Uppgiften har lagts till!',
+        currentValue: ''
       };
     });
   }
 
   editTaskHandler = (id, value) => {
-    this.setState(prevState => {
-      return {
-        tasks: this.state.tasks.filter(task => {
-          if (id === task.id) {
-            task.text = value;
-            task.done = false; // återställer den till ogjord
-          }
+    let editedTasks = [];
 
-          return true;
-        }),
+    this.setState(prevState => {
+      editedTasks = prevState.tasks.filter(task => {
+        if (id === task.id) {
+          task.text = value;
+          task.done = false; // återställer den till ogjord
+        }
+
+        return true;
+      });
+
+      this.saveTasksInLS('myTasks', editedTasks);
+
+      return {
+        tasks: editedTasks,
         task: {
           ...prevState.task,
           text: ''
@@ -71,9 +119,11 @@ class App extends Component {
         snackbar: true,
         snackbarType: 'success',
         snackbarMessage: 'Uppgiften har ändrats.',
-        doneTasks: prevState.tasks.filter(task => task.done === true)
+        // doneTasks: prevState.tasks.filter(task => task.done === true)
+        doneTasks: JSON.parse(localStorage.getItem('doneTasks')) || []
       };
     });
+    
   }
   
   openEditDialog = (id) => {
@@ -91,7 +141,8 @@ class App extends Component {
       text: event.target.value,
       id: null,
       done: false
-      }
+      },
+      currentValue: event.target.value
     });
   }
 
@@ -100,11 +151,16 @@ class App extends Component {
   }
 
   deleteTaskHandler = (id) => {
+    let deletedTasks = [];
     this.setState(prevState => {
+      deletedTasks = prevState.tasks.filter(task => {
+        return task.id !== id;
+      });
+
+      this.saveTasksInLS('myTasks', deletedTasks);
+
       return {
-        tasks: prevState.tasks.filter(task => {
-          return task.id !== id;
-        }),
+        tasks: deletedTasks,
         snackbar: true,
         snackbarType: 'error',
         snackbarMessage: 'Uppgiften har raderats.'
@@ -126,31 +182,42 @@ class App extends Component {
   }
 
   toggleAsDone = (id) => {
+    let LSDoneTasks = JSON.parse(localStorage.getItem('doneTasks')) || [];
 
     this.setState(prevState => {
       let newTask = {};
+      let toggledTasks = [];
       prevState.tasks.forEach(task => {
           if (task.id === id) {
             newTask = {
               ...task,
-              text: '',
               done: !task.done
             };
           }
       });
 
-      return {
-        tasks: prevState.tasks.map(task => {
-          // Inte den som ska uppdateras
-          if (id !== task.id) {
-            return task;
-          }
+      toggledTasks = prevState.tasks.map(task => {
+        // Inte den som ska uppdateras
+        if (id !== task.id) {
+          return task;
+        }
 
-          return {
-            ...task,
-            done: !task.done
-          }
-        }),
+        return {
+          ...task,
+          done: !task.done
+        }
+      });
+
+      LSDoneTasks.push(newTask);
+
+      // Kontrollerar att ingen ogjord task sparas
+      LSDoneTasks = LSDoneTasks.filter(task => task.done === true);
+
+      this.saveTasksInLS('myTasks', toggledTasks);
+      this.saveTasksInLS('doneTasks', LSDoneTasks);
+
+      return {
+        tasks: toggledTasks,
         task: newTask,
         snackbar: true
       }
@@ -158,7 +225,7 @@ class App extends Component {
 
     this.setState(prevState => {
       return {
-        doneTasks: prevState.tasks.filter(task => task.done === true),
+        doneTasks: LSDoneTasks,
         snackbarType: prevState.task.done ? 'success' : 'warning',
         snackbarMessage: prevState.task.done ? 'Uppgiften är utförd!' : 'Uppgiften har sparats som ej utförd.'
       };
@@ -170,7 +237,7 @@ class App extends Component {
       <div className="App">
         <Tabs changed={this.inputChangeHandler} 
         addTask={this.addTaskHandler} 
-        currentValue={this.state.task.text} 
+        currentValue={this.state.currentValue} 
         editedValue={this.state.editedValue} 
         tasks={this.state.tasks} 
         deleted={this.deleteTaskHandler} 
@@ -185,7 +252,8 @@ class App extends Component {
         editID={this.state.currentlyEditedTaskID} 
         editedChange={this.editInputChangeHandler} 
         toggled={this.toggleAsDone} 
-        doneTasks={this.state.doneTasks} />
+        doneTasks={this.state.doneTasks} 
+        clearDoneTasks={this.clearDoneTasks} />
       </div>
     );
   }

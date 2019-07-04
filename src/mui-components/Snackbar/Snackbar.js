@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Button from '@material-ui/core/Button';
+
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -85,22 +85,7 @@ const useStyles2 = makeStyles(theme => ({
 }));
 
 export default function CustomizedSnackbars(props) {
-  console.log(props.snackbar, props.snackbarType);
   const classes = useStyles2();
-  const [open, setOpen] = React.useState(false);
-
-  function handleClick() {
-    setOpen(true);
-  }
-
-  function handleClose(event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  }
-
 
   let snackbar = null;
 
@@ -115,6 +100,14 @@ export default function CustomizedSnackbars(props) {
     case 'error':
         snackbar = <MySnackbarContentWrapper
         variant="error"
+        className={classes.margin} 
+        onClose={props.closeSnackbar} 
+        message={props.snackbarMessage}
+      />;
+      break;
+      case 'warning':
+        snackbar = <MySnackbarContentWrapper
+        variant="warning"
         className={classes.margin} 
         onClose={props.closeSnackbar} 
         message={props.snackbarMessage}

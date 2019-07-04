@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -12,20 +12,20 @@ import EditIcon from '@material-ui/icons/EditOutlined';
 
 import FormDialog from '../../mui-components/FormDialog/FormDialog';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     width: '100%',
+//     maxWidth: 360,
+//     backgroundColor: theme.palette.background.paper,
+//   },
+// }));
 
 export default function CheckboxList(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
 
   const handleToggle = task => () => {
-    // const currentIndex = checked.indexOf(task);
+
     const newChecked = [...checked];
     props.toggled(task.id);
 
